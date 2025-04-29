@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
-from applications.alarm.models import Emergency
+
 # Create your models here.
 app_name='users'
 
