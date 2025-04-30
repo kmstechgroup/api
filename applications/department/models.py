@@ -6,8 +6,8 @@ app_name='department'
 #Model Department
 class Department(models.Model):
     TYPE_DEPARTMENT = [
-        ('Bomberos', 'firefighters'),
-        ('Policia','police')
+        ('F', 'firefighters'),
+        ('P','police')
     ]
 
     code_department = models.AutoField(primary_key=True, unique=True)
@@ -20,4 +20,4 @@ class Department(models.Model):
 
 
     def __str__(self):
-        return f"Departmento #{self.code_department}"
+        return f"Departmento #{self.code_department}, "

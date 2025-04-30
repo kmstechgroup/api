@@ -11,7 +11,8 @@ class EmergencySerializer(serializers.ModelSerializer):
             'date_time',
             'latitude',
             'longitude',
-            'emergency_main'   
+            'emergency_main',
+            'created_by',  
             )   
 
 
