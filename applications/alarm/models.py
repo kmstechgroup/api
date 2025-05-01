@@ -33,7 +33,7 @@ class Emergency(models.Model):
     )
 
     def __str__(self):
-        return f"Emergency {self.code_emergency} Department: {self.department}"
+        return f"Emergencia #{self.code_emergency} Creado por: {self.created_by}"
     
 #Model Department-Emergency
 
