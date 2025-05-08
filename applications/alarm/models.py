@@ -3,7 +3,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from applications.department.models import Department
 from applications.users.models import User
 
-app_name='alarm'
+app_name='emergency'
 
 #Model Emergency
 class Emergency(models.Model):
@@ -44,7 +44,7 @@ class CommunicateEmergencyDepartment(models.Model):
         related_name='emergency_communications'
     )
     code_emergency = models.ForeignKey(
-        'alarm.Emergency',
+        'emergency.Emergency',
         on_delete=models.CASCADE,
         related_name='department_communications'
     )

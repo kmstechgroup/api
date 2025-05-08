@@ -30,7 +30,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'applications.department',
     'rest_framework',
-    'applications.alarm',
+    'applications.emergency',
     'applications.users',
 ]
 

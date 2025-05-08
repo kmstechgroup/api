@@ -30,13 +30,13 @@ class Migration(migrations.Migration):
                 ('latitude', models.FloatField()),
                 ('longitude', models.FloatField()),
                 ('created_by', models.ForeignKey(default=10000001, on_delete=django.db.models.deletion.CASCADE, related_name='related_users', to='users.user')),
-                ('department', models.ManyToManyField(related_name='Emergency_Department', through='alarm.CommunicateEmergencyDepartment', to='department.department')),
-                ('emergency_main', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='related_emergencies', to='alarm.emergency')),
+                ('department', models.ManyToManyField(related_name='Emergency_Department', through='emergency.CommunicateEmergencyDepartment', to='department.department')),
+                ('emergency_main', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='related_emergencies', to='emergency.emergency')),
             ],
         ),
         migrations.AddField(
             model_name='communicateemergencydepartment',
             name='code_emergency',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='department_communications', to='alarm.emergency'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='department_communications', to='emergency.emergency'),
         ),
     ]

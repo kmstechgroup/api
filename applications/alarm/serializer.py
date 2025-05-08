@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import Emergency, CommunicateEmergencyDepartment
 
-app_name='alarm'
+app_name='emergency'
 
 class EmergencySerializer(serializers.ModelSerializer):
     class Meta:
