@@ -18,6 +18,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+RUN pip freeze > installed_apps.txt
+
 
 EXPOSE 8000
 
