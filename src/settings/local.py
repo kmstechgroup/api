@@ -17,14 +17,19 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 DATABASES = {
+    
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': config('DATABASE_NAME'),
+    #     'USER': config('DATABASE_USER'),
+    #     'PASSWORD': config('DATABASE_PASSWORD'),
+    #     'HOST': config('DATABASE_HOST'),
+    #     'PORT': config('DATABASE_PORT'),
+    #     'CONN_MAX_AGE': 0,
+    #}
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': config('DATABASE_NAME'),
-        'USER': config('DATABASE_USER'),
-        'PASSWORD': config('DATABASE_PASSWORD'),
-        'HOST': config('DATABASE_HOST'),
-        'PORT': config('DATABASE_PORT'),
-        'CONN_MAX_AGE': 0,
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',  # o str(BASE_DIR / 'db.sqlite3') en versiones más viejas
     }
 }
 

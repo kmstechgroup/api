@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from applications.department.models import Department
-from applications.users.models import User
+from applications.users.models import UserCustom
 
 app_name='emergency'
 
@@ -12,7 +12,7 @@ class Emergency(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
     created_by = models.ForeignKey(
-        'users.User',
+        'users.UserCustom',
         default=10000001,
         null=False,
         blank=False,
