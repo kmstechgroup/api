@@ -1,0 +1,20 @@
+[90m[main 2025-09-18T20:06:40.283Z][0m updateURL https://api2.cursor.sh/updates/api/update/linux-x64/cursor/1.5.11/72cdc90e79428ba27fab287df7dabf8af6ae069a4a3d6ec4355a685905f43d8e/stable
+[90m[main 2025-09-18T20:06:40.285Z][0m update#setState idle
+[130427:0918/170645.854878:ERROR:network_service_instance_impl.cc(613)] Network service crashed, restarting service.
+[91m[main 2025-09-18T20:06:45.875Z][0m ptyHost terminated unexpectedly with code 0
+[93m[main 2025-09-18T20:06:45.877Z][0m [UtilityProcess type: ptyHost, pid: 130888]: unable to kill the process
+[130427:0918/170645.892992:ERROR:zygote_communication_linux.cc(296)] Failed to send GetTerminationStatus message to zygote
+[90m[main 2025-09-18T20:06:45.898Z][0m Extension host with pid 130875 exited with code: 0, signal: unknown.
+[130427:0918/170645.901273:ERROR:gpu_process_host.cc(975)] GPU process launch failed: error_code=1002
+[130427:0918/170645.903025:ERROR:zygote_communication_linux.cc(296)] Failed to send GetTerminationStatus message to zygote
+[91m[main 2025-09-18T20:06:45.904Z][0m CodeWindow: renderer process gone (reason: clean-exit, code: <unknown>)
+[130427:0918/170646.011969:ERROR:gpu_process_host.cc(975)] GPU process launch failed: error_code=1002
+[130427:0918/170646.014507:ERROR:gpu_process_host.cc(975)] GPU process launch failed: error_code=1002
+[130427:0918/170646.015958:ERROR:gpu_process_host.cc(975)] GPU process launch failed: error_code=1002
+[130427:0918/170646.016725:ERROR:gpu_process_host.cc(975)] GPU process launch failed: error_code=1002
+[130427:0918/170646.017485:ERROR:gpu_process_host.cc(975)] GPU process launch failed: error_code=1002
+[130427:0918/170646.018913:ERROR:gpu_process_host.cc(975)] GPU process launch failed: error_code=1002
+[130427:0918/170646.019480:ERROR:gpu_process_host.cc(975)] GPU process launch failed: error_code=1002
+[130427:0918/170646.019924:ERROR:gpu_process_host.cc(975)] GPU process launch failed: error_code=1002
+[130427:0918/170646.019942:FATAL:gpu_data_manager_impl_private.cc(423)] GPU process isn't usable. Goodbye.
+[0918/170646.034685:ERROR:elf_dynamic_array_reader.h(64)] tag not found
