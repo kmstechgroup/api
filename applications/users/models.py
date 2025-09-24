@@ -255,10 +255,6 @@ class User(models.Model):
         """Check if password is correct."""
         return check_password(raw_password, self.password)
     
-    def register(self, **kwargs):
-        """Register a new user."""
-        # This can be used for custom registration logic
-        pass
     
     # Medical information helper methods
     def get_all_allergies(self):
