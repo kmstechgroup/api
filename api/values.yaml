@@ -27,7 +27,8 @@ serviceAccount:
   # Automatically mount a ServiceAccount's API credentials?
   automount: true
   # Annotations to add to the service account
-  annotations: {}
+  annotations:
+    vault.hashicorp.com/role: "api"
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: "api"
@@ -74,7 +75,7 @@ securityContext: {}
 # This is for setting up a service more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/
 service:
   # This sets the service type more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
-  type: ClusterIP
+  type: NodePort
   # This sets the ports more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#field-spec-ports
   port: 80
   targetPort: 8080
@@ -144,10 +145,12 @@ affinity: {}
 command:
   - /bin/sh
   - -lc
-args:
+args: 
   set -a;
+  {{- if .Values.vault.enabled }}
   if [ -f "{{ .Values.vault.mountPath }}/{{ .Values.vault.fileName }}" ]; then
     . "{{ .Values.vault.mountPath }}/{{ .Values.vault.fileName }}";
   fi;
+  {{- end }}
   set +a;
   exec python3 manage.py runserver 0.0.0.0:{{ .Values.service.targetPort }}
