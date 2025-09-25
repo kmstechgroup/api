@@ -7,7 +7,7 @@ from ..models import User
 from .serializer import UserRegisterSerializer
 from rest_framework.viewsets import ViewSet
 class UsersViewSet(ViewSet):
-    def list(self, request, pk=None):
+    def list(self, request):
                 users = User.objects.all()
                 serializer = UserRegisterSerializer(users, many=True)
                 return Response(serializer.data, status=status.HTTP_200_OK)

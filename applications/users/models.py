@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
-from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth.models import AbstractUser
 
 app_name = 'users'
 
@@ -64,7 +64,7 @@ class Disability(models.Model):
     def __str__(self):
         return self.name
 
-class User(models.Model):
+class User(AbstractUser):
     """
     Custom user model for app users only.
     Simple model without Django auth complexity.
@@ -83,18 +83,6 @@ class User(models.Model):
         ('F', 'Female'),
         ('X', 'Prefer not to say'),
     ]
-
-    # Basic authentication fields
-    id_user = models.AutoField(primary_key=True)
-    email = models.EmailField(unique=True)
-    password = models.CharField(max_length=128)  # Will be hashed
-    first_name = models.CharField(max_length=150, blank=True)
-    last_name = models.CharField(max_length=150, blank=True)
-    
-    # User status
-    is_active = models.BooleanField(default=True)
-    date_joined = models.DateTimeField(auto_now_add=True)
-    last_login = models.DateTimeField(blank=True, null=True)
     
     # Additional fields for OAuth with Google
     google_id = models.CharField(
@@ -109,8 +97,6 @@ class User(models.Model):
         help_text="Indicates if user registered with OAuth"
     )
     
-    # Personal identification fields
-    id_user = models.AutoField(primary_key=True)
     identificator = models.BigIntegerField(
         blank=True, 
         null=True,
@@ -225,7 +211,6 @@ class User(models.Model):
     )
     
     # Audit fields
-    created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
     # Model configuration
@@ -246,14 +231,6 @@ class User(models.Model):
     def is_google_user(self):
         """Checks if user registered with Google OAuth."""
         return bool(self.google_id)
-    
-    def set_password(self, raw_password):
-        """Set password with hashing."""
-        self.password = make_password(raw_password)
-    
-    def check_password(self, raw_password):
-        """Check if password is correct."""
-        return check_password(raw_password, self.password)
     
     
     # Medical information helper methods
