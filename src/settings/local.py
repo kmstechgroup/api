@@ -18,19 +18,19 @@ ALLOWED_HOSTS = ["*", "localhost", "127.0.0.1", "192.168.3.182"]
 
 DATABASES = {
     
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': config('DATABASE_NAME'),
-        'USER': config('DATABASE_USER'),
-        'PASSWORD': config('DATABASE_PASSWORD'),
-        'HOST': 'mysql.database.svc.cluster.local',
-        'PORT': 3306,
-        'CONN_MAX_AGE': 0,
-    }
     # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',  # o str(BASE_DIR / 'db.sqlite3') en versiones más viejas
-    # }
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': config('DATABASE_NAME'),
+    #     'USER': config('DATABASE_USER'),
+    #     'PASSWORD': config('DATABASE_PASSWORD'),
+    #     'HOST': 'mysql.database.svc.cluster.local',
+    #     'PORT': 3306,
+    #     'CONN_MAX_AGE': 0,
+    # },
+     'default': {
+         'ENGINE': 'django.db.backends.sqlite3',
+         'NAME': BASE_DIR / 'db.sqlite3',  # o str(BASE_DIR / 'db.sqlite3') en versiones más viejas
+     }
 }
 
 
