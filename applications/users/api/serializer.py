@@ -1,5 +1,3 @@
-from curses import meta
-from dataclasses import field
 from rest_framework.serializers import ModelSerializer, CharField
 from rest_framework.viewsets import ViewSet
 from ..models import User

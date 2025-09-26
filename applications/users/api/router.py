@@ -3,6 +3,6 @@ from .views import UsersAdminViewSet, UserRegisterView,UserLoginView
 
 router = DefaultRouter()
 
-router.register(prefix='users/admin', basename='users-admin', viewset=UsersAdminViewSet)
+router.register(prefix='backoffice/users', basename='users-admin', viewset=UsersAdminViewSet)
 router.register(prefix='register', basename='users-register', viewset=UserRegisterView)
 router.register(prefix='login', basename='users-login', viewset=UserLoginView)
