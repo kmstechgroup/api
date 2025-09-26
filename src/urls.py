@@ -30,7 +30,7 @@ urlpatterns = [
         name='schema'
     ),
 
-    # UI solo para admin
+    # UI only for admins
     path(
         'backoffice/schema/swagger-ui/',
         SpectacularSwaggerView.as_view(url_name='schema', permission_classes=[IsAdminUser]),

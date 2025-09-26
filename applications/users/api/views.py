@@ -4,7 +4,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
 from ..models import User
-from .serializer import UserRegisterSerializer, UserAdminSerializer
+from .serializer import UserRegisterSerializer, UserAdminSerializer, UserSerializer
 from rest_framework.viewsets import ViewSet, ModelViewSet
 from rest_framework.permissions import IsAdminUser, AllowAny, IsAuthenticated
 from rest_framework.authtoken.models import Token
@@ -14,16 +14,21 @@ from .services import login_user
 
 
 
-class UserViewSet(ModelViewSet):
-    #serializer_class = UserProfileSerializer
-    #permission_classes = [IsAuthenticated]
+class UserViewSet(ViewSet):
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
 
-    # Solo habilitamos estos métodos HTTP
-    #http_method_names = ['get', 'post', 'put', 'patch']  
+    @action(detail=False, methods=["get", "patch"])
+    def profile(self, request):
+        if request.method == "GET":
+            serializer = UserSerializer(request.user)
+            return Response(serializer.data)
+        serializer = UserSerializer(request.user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    #def get_queryset(self):
-    #    return User.objects.filter(pk=self.request.user.pk)
-    pass
 
 class UsersAdminViewSet(ModelViewSet):
     
