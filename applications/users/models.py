@@ -83,7 +83,14 @@ class User(AbstractUser):
         ('F', 'Female'),
         ('X', 'Prefer not to say'),
     ]
-    
+    email = models.EmailField(unique=True)
+    username = models.CharField(
+        max_length=30,
+        unique=True,
+        blank=True,
+        null=True,
+    )
+       
     # Additional fields for OAuth with Google
     google_id = models.CharField(
         max_length=255, 
@@ -214,6 +221,8 @@ class User(AbstractUser):
     updated_at = models.DateTimeField(auto_now=True)
     
     # Model configuration
+    USERNAME_FIELD = "email"  
+    REQUIRED_FIELDS = ["username"]
     
     class Meta:
         db_table = 'user'

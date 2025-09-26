@@ -4,17 +4,19 @@ from django.contrib.auth.admin import UserAdmin as UserBaseAdmin
 
 @admin.register(User)
 class UserAdmin(UserBaseAdmin):
+
+        ordering = ("email",)
         # Campos que se muestran en el listado del admin
         list_display = (
-        "username", "email", "first_name", "last_name", 
+        "email", "first_name", "last_name", 
         "is_staff", "is_active", "is_superuser", "blocked", "strikes"
         )
-        search_fields = ("username", "email", "first_name", "last_name")
+        search_fields = ("email", "first_name", "last_name")
         list_filter = ("is_staff", "is_active", "is_superuser", "blocked", "sex", "blood_type")
 
         fieldsets = (
                 ("👤 Información de cuenta", {
-                "fields": ("username", "password", "email", "first_name", "last_name")
+                "fields": ("email", "password", "first_name", "last_name")
                 }),
                 ("⚙️ Permisos y acceso", {
                     "fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions")
@@ -47,7 +49,7 @@ class UserAdmin(UserBaseAdmin):
         add_fieldsets = (
             (None, {
                 "classes": ("wide",),
-                "fields": ("username", "email","identificator","password1", "password2"),
+                "fields": ("email","identificator","password1", "password2"),
             }),
         )
 @admin.register(Allergy)
