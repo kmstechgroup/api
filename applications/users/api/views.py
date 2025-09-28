@@ -4,13 +4,15 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
 from ..models import User
-from .serializer import UserRegisterSerializer, UserAdminSerializer, UserSerializer
+from .serializer import UserRegisterSerializer, UserAdminSerializer, UserSerializer, GoogleLoginSerializer
 from rest_framework.viewsets import ViewSet, ModelViewSet
 from rest_framework.permissions import IsAdminUser, AllowAny, IsAuthenticated
 from rest_framework.authtoken.models import Token
-from django.contrib.auth import authenticate
 from rest_framework import serializers
 from .services import login_user
+from google.oauth2 import id_token
+from google.auth.transport import requests
+
 
 
 
@@ -81,3 +83,56 @@ class UserLoginView(ViewSet):
         return Response(user, status=status.HTTP_202_ACCEPTED)
     
     
+class UserGoogleLoginSet(ViewSet):
+    permission_classes = [AllowAny]
+    serializer_class = GoogleLoginSerializer
+    
+    def create(self, request):
+        serializer = GoogleLoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        token = serializer.validated_data["id_token"]
+
+        try:
+            # ✅ Verificar token con Google
+            idinfo = id_token.verify_oauth2_token(token, requests.Request())
+
+            # Validar el aud (client_id de tu app en Google Cloud)
+            if idinfo["aud"] != "324154317577-fg88npuvs4d57nku05fs7ubcte2dbdro.apps.googleusercontent.com":
+                return Response(
+                    {"error": "Audience inválido"}, status=status.HTTP_400_BAD_REQUEST
+                )
+
+            email = idinfo.get("email")
+            first_name = idinfo.get("given_name")
+            last_name = idinfo.get("family_name")
+
+            # Buscar o crear usuario
+            user, created = User.objects.get_or_create(
+            email=email,
+            defaults={
+                "identificator": None,
+                "first_name": first_name,
+                "last_name": last_name,
+            },
+        )
+
+
+            # Generar token interno
+            token_obj, _ = Token.objects.get_or_create(user=user)
+
+            # Serializar usuario para la respuesta
+            response_serializer = self.serializer_class(user)
+
+            return Response(
+                {
+                    "token": token_obj.key,
+                    "user": response_serializer.data,
+                },
+                status=status.HTTP_200_OK,
+            )
+
+        except ValueError:
+            return Response(
+                {"error": "Token inválido"}, status=status.HTTP_400_BAD_REQUEST
+            )

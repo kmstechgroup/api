@@ -89,3 +89,12 @@ class UserRegisterSerializer(ModelSerializer):
         user.save()
         return user
     
+
+class GoogleLoginSerializer(ModelSerializer):
+    # Solo lo recibimos en el request
+    id_token = CharField(write_only=True, required=True)
+
+    class Meta:
+        model = User
+        fields = ["id", "email", "identificator", "id_token"]
+        read_only_fields = ["id", "email", "identificator"]
