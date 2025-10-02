@@ -47,7 +47,7 @@ class UserSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = [
-            "email", "username", "first_name", "last_name",
+            "email","first_name", "last_name",
             "identificator", "address", "phone_number",
             "blood_type", "sex", "height", "weight", "age",
             
@@ -97,4 +97,4 @@ class GoogleLoginSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = ["id", "email", "identificator", "id_token"]
-        read_only_fields = ["id", "email", "identificator"]
+        read_only_fields = ["id", "email"]

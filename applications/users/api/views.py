@@ -90,9 +90,9 @@ class UserGoogleLoginSet(ViewSet):
     def create(self, request):
         serializer = GoogleLoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-
+        identificator = serializer.validated_data["identificator"]
         token = serializer.validated_data["id_token"]
-
+        identificator = serializer.validated_data["identificator"]
         try:
             # ✅ Verificar token con Google
             idinfo = id_token.verify_oauth2_token(token, requests.Request())
@@ -106,12 +106,12 @@ class UserGoogleLoginSet(ViewSet):
             email = idinfo.get("email")
             first_name = idinfo.get("given_name")
             last_name = idinfo.get("family_name")
-
+            
             # Buscar o crear usuario
             user, created = User.objects.get_or_create(
             email=email,
             defaults={
-                "identificator": None,
+                "identificator": identificator,
                 "first_name": first_name,
                 "last_name": last_name,
             },
