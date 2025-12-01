@@ -1,3 +1,4 @@
+from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer, CharField, PrimaryKeyRelatedField
 from ..models import User, Allergy, ChronicDisease, PreviousSurgery, Disability
 
@@ -172,3 +173,18 @@ class GoogleLoginSerializer(ModelSerializer):
         model = User
         fields = ["id", "email", "identificator", "id_token"]
         read_only_fields = ["id", "email"]
+
+
+# =============================================================================
+# MEDICAL OPTIONS RESPONSE SERIALIZER
+# =============================================================================
+
+class MedicalOptionsResponseSerializer(serializers.Serializer):
+    """
+    Serializer for medical options response.
+    Contains all active medical options grouped by type.
+    """
+    allergies = AllergySerializer(many=True, read_only=True)
+    chronic_diseases = ChronicDiseaseSerializer(many=True, read_only=True)
+    previous_surgeries = PreviousSurgerySerializer(many=True, read_only=True)
+    disabilities = DisabilitySerializer(many=True, read_only=True)

@@ -3,7 +3,7 @@
 # =============================================================================
 
 from rest_framework.routers import DefaultRouter
-from .views import UsersAdminViewSet, UserRegisterView, UserLoginView, UserViewSet, UserGoogleLoginSet
+from .views import UsersAdminViewSet, UserRegisterView, UserLoginView, UserViewSet, UserGoogleLoginSet, MedicalOptionsViewSet
 
 # Create the main router instance
 router = DefaultRouter()
@@ -43,4 +43,11 @@ router.register(
     prefix='user', 
     basename='users-profile', 
     viewset=UserViewSet
+)
+
+# Medical options routes - Authenticated users only
+router.register(
+    prefix='medical-options', 
+    basename='medical-options', 
+    viewset=MedicalOptionsViewSet
 )
