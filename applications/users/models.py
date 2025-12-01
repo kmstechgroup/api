@@ -113,7 +113,7 @@ class User(AbstractUser):
     )
     
     identificator = models.BigIntegerField(
-        blank=True, 
+        blank=True,
         null=True,
         help_text="DNI, passport or other identity document number"
     )

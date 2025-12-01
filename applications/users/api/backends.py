@@ -5,7 +5,7 @@ User = get_user_model()
 
 class EmailIdentificatorBackend(ModelBackend):
     def authenticate(self, request, username=None, email=None, identificator=None, password=None, **kwargs):
-        # Admin manda "username", lo usamos como email
+        # Admin sends "username", we use it as email
         if email is None:
             email = username
 
@@ -14,18 +14,18 @@ class EmailIdentificatorBackend(ModelBackend):
         except User.DoesNotExist:
             return None
 
-        # 🔐 Caso admin/superuser → solo email + password
+        # 🔐 Admin/superuser case → only email + password
         if user.is_staff or user.is_superuser:
             if user.check_password(password) and self.user_can_authenticate(user):
                 return user
             return None
 
-        # 🔐 Caso usuario común → necesita identificator válido
+        # 🔐 Common user case → needs valid identificator
         if identificator is None:
-            return None  # si no mandó identificator, rechazamos
+            return None  # if no identificator provided, reject
 
         if str(user.identificator) != str(identificator):
-            return None  # si no coincide, rechazamos
+            return None  # if doesn't match, reject
 
         if user.check_password(password) and self.user_can_authenticate(user):
             return user

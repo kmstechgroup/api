@@ -20,13 +20,13 @@ class Department(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.code_department:
-            # Buscar el último número usado para este tipo
+            # Find the last number used for this type
             last = Department.objects.filter(type_department=self.type_department) \
                 .order_by('-code_department') \
                 .first()
             
             if last:
-                # Obtener número desde 'F5' → 5
+                # Get number from 'F5' → 5
                 last_number = int(last.code_department[1:])
             else:
                 last_number = 0

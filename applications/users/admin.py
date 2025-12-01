@@ -6,7 +6,7 @@ from django.contrib.auth.admin import UserAdmin as UserBaseAdmin
 class UserAdmin(UserBaseAdmin):
 
         ordering = ("email",)
-        # Campos que se muestran en el listado del admin
+        # Fields displayed in admin listing
         list_display = (
         "email", "first_name", "last_name", 
         "is_staff", "is_active", "is_superuser", "blocked", "strikes"
@@ -15,16 +15,16 @@ class UserAdmin(UserBaseAdmin):
         list_filter = ("is_staff", "is_active", "is_superuser", "blocked", "sex", "blood_type")
 
         fieldsets = (
-                ("👤 Información de cuenta", {
+                ("👤 Account Information", {
                 "fields": ("email", "password", "first_name", "last_name")
                 }),
-                ("⚙️ Permisos y acceso", {
+                ("⚙️ Permissions and Access", {
                     "fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions")
                 }),
-                ("📍 Datos personales", {
+                ("📍 Personal Data", {
                     "fields": ("identificator", "address", "phone_number", "sex", "age", "height", "weight", "blood_type")
                 }),
-                ("💊 Información médica", {
+                ("💊 Medical Information", {
                     "fields": (
                         "allergies", "allergies_other",
                         "chronic_diseases", "chronic_diseases_other",
@@ -32,16 +32,16 @@ class UserAdmin(UserBaseAdmin):
                         "disabilities", "disabilities_other"
                     )
                 }),
-                ("📞 Contactos de emergencia", {
+                ("📞 Emergency Contacts", {
                     "fields": ("close_contacts",)
                 }),
                 ("🔐 OAuth", {
                     "fields": ("google_id", "is_oauth_user")
                 }),
-                ("⚠️ Sistema de advertencias", {
+                ("⚠️ Warning System", {
                     "fields": ("strikes", "blocked")
                 }),
-                ("🕒 Auditoría", {
+                ("🕒 Audit", {
                     "fields": ("last_login", "date_joined", "updated_at")
                 }),
         )
@@ -54,11 +54,11 @@ class UserAdmin(UserBaseAdmin):
         )
 @admin.register(Allergy)
 class AllergyAdmin(admin.ModelAdmin):
-    list_display = ("name", "is_active", "created_at")  # columnas en el listado
-    search_fields = ("name",)                          # buscador por nombre
-    list_filter = ("is_active",)                       # filtro por estado
-    ordering = ("name",)                               # orden alfabético
-    readonly_fields = ("created_at",)                  # no editable
+    list_display = ("name", "is_active", "created_at")  # columns in listing
+    search_fields = ("name",)                          # search by name
+    list_filter = ("is_active",)                       # filter by status
+    ordering = ("name",)                               # alphabetical order
+    readonly_fields = ("created_at",)                  # not editable
 
 
 @admin.register(ChronicDisease)

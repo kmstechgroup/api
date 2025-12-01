@@ -42,8 +42,8 @@ class UserRegisterView(ViewSet):
     permission_classes = [AllowAny]
     
     @extend_schema(
-        request=UserRegisterSerializer,   # qué espera en el body
-        responses=UserRegisterSerializer  # qué devuelve si todo va bien
+        request=UserRegisterSerializer,   # what it expects in the body
+        responses=UserRegisterSerializer  # what it returns if everything goes well
     )
     
     #@action(detail=False, methods=['post'])
@@ -100,7 +100,7 @@ class UserGoogleLoginSet(ViewSet):
             # Validar el aud (client_id de tu app en Google Cloud)
             if idinfo["aud"] != "324154317577-fg88npuvs4d57nku05fs7ubcte2dbdro.apps.googleusercontent.com":
                 return Response(
-                    {"error": "Audience inválido"}, status=status.HTTP_400_BAD_REQUEST
+                    {"error": "Invalid audience"}, status=status.HTTP_400_BAD_REQUEST
                 )
 
             email = idinfo.get("email")
@@ -134,5 +134,5 @@ class UserGoogleLoginSet(ViewSet):
 
         except ValueError:
             return Response(
-                {"error": "Token inválido"}, status=status.HTTP_400_BAD_REQUEST
+                {"error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST
             )
