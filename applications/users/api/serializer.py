@@ -188,3 +188,51 @@ class MedicalOptionsResponseSerializer(serializers.Serializer):
     chronic_diseases = ChronicDiseaseSerializer(many=True, read_only=True)
     previous_surgeries = PreviousSurgerySerializer(many=True, read_only=True)
     disabilities = DisabilitySerializer(many=True, read_only=True)
+
+
+# =============================================================================
+# ADMIN SERIALIZERS FOR MEDICAL OPTIONS (CRUD)
+# =============================================================================
+
+class AllergyAdminSerializer(ModelSerializer):
+    """
+    Admin serializer for Allergy model.
+    Includes all fields for CRUD operations.
+    """
+    class Meta:
+        model = Allergy
+        fields = ["id", "name", "is_active", "created_at"]
+        read_only_fields = ["created_at"]
+
+
+class ChronicDiseaseAdminSerializer(ModelSerializer):
+    """
+    Admin serializer for ChronicDisease model.
+    Includes all fields for CRUD operations.
+    """
+    class Meta:
+        model = ChronicDisease
+        fields = ["id", "name", "is_active", "created_at"]
+        read_only_fields = ["created_at"]
+
+
+class PreviousSurgeryAdminSerializer(ModelSerializer):
+    """
+    Admin serializer for PreviousSurgery model.
+    Includes all fields for CRUD operations.
+    """
+    class Meta:
+        model = PreviousSurgery
+        fields = ["id", "name", "is_active", "created_at"]
+        read_only_fields = ["created_at"]
+
+
+class DisabilityAdminSerializer(ModelSerializer):
+    """
+    Admin serializer for Disability model.
+    Includes all fields for CRUD operations.
+    """
+    class Meta:
+        model = Disability
+        fields = ["id", "name", "is_active", "created_at"]
+        read_only_fields = ["created_at"]

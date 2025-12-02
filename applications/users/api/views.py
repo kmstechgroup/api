@@ -1,17 +1,29 @@
 from django.views.generic import View
-from drf_spectacular.utils import extend_schema, OpenApiParameter,inline_serializer
+from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
 from ..models import User, Allergy, ChronicDisease, PreviousSurgery, Disability
-from .serializer import UserRegisterSerializer, UserAdminSerializer, UserSerializer, GoogleLoginSerializer, AllergySerializer, ChronicDiseaseSerializer, PreviousSurgerySerializer, DisabilitySerializer, MedicalOptionsResponseSerializer
+from .serializer import (
+    UserRegisterSerializer, UserAdminSerializer, UserSerializer, GoogleLoginSerializer,
+    AllergySerializer, ChronicDiseaseSerializer, PreviousSurgerySerializer, DisabilitySerializer,
+    AllergyAdminSerializer, ChronicDiseaseAdminSerializer, PreviousSurgeryAdminSerializer, DisabilityAdminSerializer
+)
 from rest_framework.viewsets import ViewSet, ModelViewSet
 from rest_framework.permissions import IsAdminUser, AllowAny, IsAuthenticated
 from rest_framework.authtoken.models import Token
-from rest_framework import serializers
 from .services import login_user
 from google.oauth2 import id_token
 from google.auth.transport import requests
+from .swagger_schemas import (
+    user_profile_schema,
+    admin_users_list_schema, admin_users_create_schema, admin_users_retrieve_schema,
+    admin_users_update_schema, admin_users_partial_update_schema, admin_users_destroy_schema,
+    register_schema, login_schema, google_login_schema,
+    medical_options_list_schema,
+    medical_crud_list_schema, medical_crud_create_schema, medical_crud_retrieve_schema,
+    medical_crud_update_schema, medical_crud_partial_update_schema, medical_crud_destroy_schema
+)
 
 
 
@@ -20,21 +32,7 @@ class UserViewSet(ViewSet):
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
 
-    @extend_schema(
-        summary="Get or update user profile",
-        description="GET: Retrieve the authenticated user's profile information including personal data, medical information, and emergency contacts. PATCH: Update the authenticated user's profile information. Only provided fields will be updated (partial update).",
-        request=UserSerializer,
-        responses={
-            200: UserSerializer,
-            400: inline_serializer(
-                name="ProfileUpdateError",
-                fields={
-                    "field_name": serializers.ListField(child=serializers.CharField()),
-                }
-            )
-        },
-        tags=["User Profile"]
-    )
+    @extend_schema(**user_profile_schema())
     @action(detail=False, methods=["get", "patch"])
     def profile(self, request):
         if request.method == "GET":
@@ -57,74 +55,34 @@ class UsersAdminViewSet(ModelViewSet):
     serializer_class = UserAdminSerializer
     permission_classes = [IsAdminUser]
     
-    @extend_schema(
-        summary="List all users",
-        description="Retrieve a list of all users. Only accessible by administrators.",
-        tags=["Admin - Users"]
-    )
+    @extend_schema(**admin_users_list_schema())
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
     
-    @extend_schema(
-        summary="Create a new user",
-        description="Create a new user account. Only accessible by administrators.",
-        tags=["Admin - Users"]
-    )
+    @extend_schema(**admin_users_create_schema())
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
     
-    @extend_schema(
-        summary="Get user details",
-        description="Retrieve detailed information about a specific user. Only accessible by administrators.",
-        tags=["Admin - Users"]
-    )
+    @extend_schema(**admin_users_retrieve_schema())
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)
     
-    @extend_schema(
-        summary="Update user (full)",
-        description="Update all fields of a user. Only accessible by administrators.",
-        tags=["Admin - Users"]
-    )
+    @extend_schema(**admin_users_update_schema())
     def update(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs)
     
-    @extend_schema(
-        summary="Update user (partial)",
-        description="Partially update user fields. Only accessible by administrators.",
-        tags=["Admin - Users"]
-    )
+    @extend_schema(**admin_users_partial_update_schema())
     def partial_update(self, request, *args, **kwargs):
         return super().partial_update(request, *args, **kwargs)
     
-    @extend_schema(
-        summary="Delete user",
-        description="Delete a user account. Only accessible by administrators.",
-        tags=["Admin - Users"]
-    )
+    @extend_schema(**admin_users_destroy_schema())
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
     
 class UserRegisterView(ViewSet):
     permission_classes = [AllowAny]
     
-    @extend_schema(
-        summary="Register a new user",
-        description="Create a new user account with email, identificator, and password. The password will be hashed automatically.",
-        request=UserRegisterSerializer,
-        responses={
-            201: UserRegisterSerializer,
-            400: inline_serializer(
-                name="RegisterError",
-                fields={
-                    "email": serializers.ListField(child=serializers.CharField()),
-                    "identificator": serializers.ListField(child=serializers.CharField()),
-                    "password": serializers.ListField(child=serializers.CharField()),
-                }
-            )
-        },
-        tags=["Authentication"]
-    )
+    @extend_schema(**register_schema())
     def create(self, request):
         serializer = UserRegisterSerializer(data=request.data)
         if serializer.is_valid():
@@ -135,33 +93,7 @@ class UserRegisterView(ViewSet):
 class UserLoginView(ViewSet):
     permission_classes = [AllowAny]
     
-    @extend_schema(
-        summary="User login",
-        description="Authenticate a user with email, identificator, and password. Returns an authentication token on success.",
-        request=inline_serializer(
-            name="LoginRequest",
-            fields={
-                "email": serializers.EmailField(help_text="User's email address"),
-                "identificator": serializers.IntegerField(help_text="User's identification number (DNI/passport)"),
-                "password": serializers.CharField(help_text="User's password"),
-            }
-        ),
-        responses={
-            202: inline_serializer(
-                name="LoginSuccessResponse",
-                fields={
-                    "token": serializers.CharField(help_text="Authentication token for API requests"),
-                }
-            ),
-            401: inline_serializer(
-                name="LoginErrorResponse",
-                fields={
-                    "error": serializers.CharField(help_text="Error message describing authentication failure"),
-                }
-            )
-        },
-        tags=["Authentication"]
-    )
+    @extend_schema(**login_schema())
     def create(self, request):
         user = login_user(email=request.data['email'], password=request.data['password'], identificator=request.data['identificator'])
         print(f"User:{user}")
@@ -175,27 +107,7 @@ class UserGoogleLoginSet(ViewSet):
     permission_classes = [AllowAny]
     serializer_class = GoogleLoginSerializer
     
-    @extend_schema(
-        summary="Google OAuth login",
-        description="Authenticate a user using Google OAuth. Verifies the Google ID token and creates or retrieves the user account. Returns an authentication token and user data.",
-        request=GoogleLoginSerializer,
-        responses={
-            200: inline_serializer(
-                name="GoogleLoginSuccessResponse",
-                fields={
-                    "token": serializers.CharField(help_text="Authentication token for API requests"),
-                    "user": GoogleLoginSerializer(help_text="User data"),
-                }
-            ),
-            400: inline_serializer(
-                name="GoogleLoginErrorResponse",
-                fields={
-                    "error": serializers.CharField(help_text="Error message (Invalid audience or Invalid token)"),
-                }
-            )
-        },
-        tags=["Authentication"]
-    )
+    @extend_schema(**google_login_schema())
     def create(self, request):
         serializer = GoogleLoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -254,12 +166,7 @@ class MedicalOptionsViewSet(ViewSet):
     """
     permission_classes = [IsAuthenticated]
 
-    @extend_schema(
-        summary="Get all active medical options",
-        description="Retrieve all active medical options (allergies, chronic diseases, previous surgeries, and disabilities) for use in forms.",
-        responses=MedicalOptionsResponseSerializer,
-        tags=["Medical Options"]
-    )
+    @extend_schema(**medical_options_list_schema())
     def list(self, request):
         """
         Retrieve all active medical options.
@@ -281,3 +188,143 @@ class MedicalOptionsViewSet(ViewSet):
             "previous_surgeries": previous_surgeries_serializer.data,
             "disabilities": disabilities_serializer.data,
         })
+
+
+# =============================================================================
+# ADMIN CRUD VIEWSETS FOR MEDICAL OPTIONS
+# =============================================================================
+
+class AllergyViewSet(ModelViewSet):
+    """
+    ViewSet for admin CRUD operations on Allergy model.
+    Only accessible by administrators.
+    """
+    queryset = Allergy.objects.all()
+    serializer_class = AllergyAdminSerializer
+    permission_classes = [IsAdminUser]
+    
+    @extend_schema(**medical_crud_list_schema("allergies"))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+    
+    @extend_schema(**medical_crud_create_schema("allergies"))
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+    
+    @extend_schema(**medical_crud_retrieve_schema("allergies"))
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+    
+    @extend_schema(**medical_crud_update_schema("allergies"))
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+    
+    @extend_schema(**medical_crud_partial_update_schema("allergies"))
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
+    
+    @extend_schema(**medical_crud_destroy_schema("allergies"))
+    def destroy(self, request, *args, **kwargs):
+        return super().destroy(request, *args, **kwargs)
+
+
+class ChronicDiseaseViewSet(ModelViewSet):
+    """
+    ViewSet for admin CRUD operations on ChronicDisease model.
+    Only accessible by administrators.
+    """
+    queryset = ChronicDisease.objects.all()
+    serializer_class = ChronicDiseaseAdminSerializer
+    permission_classes = [IsAdminUser]
+    
+    @extend_schema(**medical_crud_list_schema("chronic diseases"))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+    
+    @extend_schema(**medical_crud_create_schema("chronic diseases"))
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+    
+    @extend_schema(**medical_crud_retrieve_schema("chronic diseases"))
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+    
+    @extend_schema(**medical_crud_update_schema("chronic diseases"))
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+    
+    @extend_schema(**medical_crud_partial_update_schema("chronic diseases"))
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
+    
+    @extend_schema(**medical_crud_destroy_schema("chronic diseases"))
+    def destroy(self, request, *args, **kwargs):
+        return super().destroy(request, *args, **kwargs)
+
+
+class PreviousSurgeryViewSet(ModelViewSet):
+    """
+    ViewSet for admin CRUD operations on PreviousSurgery model.
+    Only accessible by administrators.
+    """
+    queryset = PreviousSurgery.objects.all()
+    serializer_class = PreviousSurgeryAdminSerializer
+    permission_classes = [IsAdminUser]
+    
+    @extend_schema(**medical_crud_list_schema("previous surgeries"))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+    
+    @extend_schema(**medical_crud_create_schema("previous surgeries"))
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+    
+    @extend_schema(**medical_crud_retrieve_schema("previous surgeries"))
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+    
+    @extend_schema(**medical_crud_update_schema("previous surgeries"))
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+    
+    @extend_schema(**medical_crud_partial_update_schema("previous surgeries"))
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
+    
+    @extend_schema(**medical_crud_destroy_schema("previous surgeries"))
+    def destroy(self, request, *args, **kwargs):
+        return super().destroy(request, *args, **kwargs)
+
+
+class DisabilityViewSet(ModelViewSet):
+    """
+    ViewSet for admin CRUD operations on Disability model.
+    Only accessible by administrators.
+    """
+    queryset = Disability.objects.all()
+    serializer_class = DisabilityAdminSerializer
+    permission_classes = [IsAdminUser]
+    
+    @extend_schema(**medical_crud_list_schema("disabilities"))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+    
+    @extend_schema(**medical_crud_create_schema("disabilities"))
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+    
+    @extend_schema(**medical_crud_retrieve_schema("disabilities"))
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+    
+    @extend_schema(**medical_crud_update_schema("disabilities"))
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+    
+    @extend_schema(**medical_crud_partial_update_schema("disabilities"))
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
+    
+    @extend_schema(**medical_crud_destroy_schema("disabilities"))
+    def destroy(self, request, *args, **kwargs):
+        return super().destroy(request, *args, **kwargs)

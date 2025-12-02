@@ -3,7 +3,11 @@
 # =============================================================================
 
 from rest_framework.routers import DefaultRouter
-from .views import UsersAdminViewSet, UserRegisterView, UserLoginView, UserViewSet, UserGoogleLoginSet, MedicalOptionsViewSet
+from .views import (
+    UsersAdminViewSet, UserRegisterView, UserLoginView, UserViewSet, 
+    UserGoogleLoginSet, MedicalOptionsViewSet,
+    AllergyViewSet, ChronicDiseaseViewSet, PreviousSurgeryViewSet, DisabilityViewSet
+)
 
 # Create the main router instance
 router = DefaultRouter()
@@ -50,4 +54,29 @@ router.register(
     prefix='medical-options', 
     basename='medical-options', 
     viewset=MedicalOptionsViewSet
+)
+
+# Admin medical options CRUD routes - Administrators only
+router.register(
+    prefix='backoffice/medical/allergies',
+    basename='allergies-admin',
+    viewset=AllergyViewSet
+)
+
+router.register(
+    prefix='backoffice/medical/chronic-diseases',
+    basename='chronic-diseases-admin',
+    viewset=ChronicDiseaseViewSet
+)
+
+router.register(
+    prefix='backoffice/medical/previous-surgeries',
+    basename='previous-surgeries-admin',
+    viewset=PreviousSurgeryViewSet
+)
+
+router.register(
+    prefix='backoffice/medical/disabilities',
+    basename='disabilities-admin',
+    viewset=DisabilityViewSet
 )
