@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'applications.users',
     'drf_spectacular',
     'rest_framework.authtoken',
+    'django_rest_passwordreset',
     'corsheaders',
 ]
 
@@ -134,3 +135,15 @@ AUTHENTICATION_BACKENDS = [
     'applications.users.api.backends.EmailIdentificatorBackend',
     #'django.contrib.auth.backends.ModelBackend'
 ]
+
+# =============================================================================
+# EMAIL CONFIGURATION
+# =============================================================================
+
+# Email backend for development (console)
+# For production, configure SMTP settings
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'SafeOn <noreply@safeon.com>'
+
+# Frontend URL for password reset links
+FRONTEND_URL = config('FRONTEND_URL', default='http://localhost:3000')
