@@ -147,9 +147,10 @@ class User(AbstractUser):
         null=True,
         help_text="Weight in kilograms"
     )
-    age = models.PositiveIntegerField(
+    birthdate = models.DateField(
         blank=True, 
-        null=True
+        null=True,
+        help_text="User's date of birth"
     )
     
     # Detailed medical information - ManyToMany relationships for predefined options

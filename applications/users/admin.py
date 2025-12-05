@@ -22,7 +22,7 @@ class UserAdmin(UserBaseAdmin):
                     "fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions")
                 }),
                 ("📍 Personal Data", {
-                    "fields": ("identificator", "address", "phone_number", "sex", "age", "height", "weight", "blood_type")
+                    "fields": ("identificator", "address", "phone_number", "sex", "birthdate", "height", "weight", "blood_type")
                 }),
                 ("💊 Medical Information", {
                     "fields": (

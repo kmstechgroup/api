@@ -15,9 +15,10 @@ def password_reset_token_created_handler(sender, instance, reset_password_token,
     Signal handler that executes when a password reset token is created.
     Sends an email to the user with the link to reset their password.
     """
-    # Build frontend URL with the token
-    frontend_url = getattr(settings, 'FRONTEND_URL', 'http://localhost:3000')
-    reset_url = f"{frontend_url}/reset-password?token={reset_password_token.key}"
+    # Build app deep link URL with the token
+    # Custom URL scheme format: safeon://reset-password?token=...
+    # Configuration comes from .env file: APP_SCHEME
+    reset_url = f"{settings.APP_SCHEME}://reset-password?token={reset_password_token.key}"
     
     # Build email message
     subject = "Restablecer contraseña - SafeOn"

@@ -155,6 +155,89 @@ def google_login_schema():
         "tags": ["Authentication"]
     }
 
+def password_reset_request_schema():
+    return {
+        "summary": "Request password reset",
+        "description": "Request a password reset token. An email will be sent with the reset link.",
+        "request": inline_serializer(
+            name="PasswordResetRequest",
+            fields={
+                "email": serializers.EmailField(help_text="User's email address"),
+            }
+        ),
+        "responses": {
+            200: inline_serializer(
+                name="PasswordResetRequestSuccess",
+                fields={
+                    "status": serializers.CharField(help_text="Status message"),
+                }
+            ),
+            400: inline_serializer(
+                name="PasswordResetRequestError",
+                fields={
+                    "email": serializers.ListField(child=serializers.CharField()),
+                }
+            )
+        },
+        "tags": ["Authentication"]
+    }
+
+def password_reset_confirm_schema():
+    return {
+        "summary": "Confirm password reset",
+        "description": "Reset the password using the token received via email.",
+        "request": inline_serializer(
+            name="PasswordResetConfirm",
+            fields={
+                "token": serializers.CharField(help_text="Password reset token from email"),
+                "password": serializers.CharField(help_text="New password"),
+            }
+        ),
+        "responses": {
+            200: inline_serializer(
+                name="PasswordResetConfirmSuccess",
+                fields={
+                    "status": serializers.CharField(help_text="Status message"),
+                }
+            ),
+            400: inline_serializer(
+                name="PasswordResetConfirmError",
+                fields={
+                    "token": serializers.ListField(child=serializers.CharField()),
+                    "password": serializers.ListField(child=serializers.CharField()),
+                }
+            )
+        },
+        "tags": ["Authentication"]
+    }
+
+def password_reset_validate_token_schema():
+    return {
+        "summary": "Validate password reset token",
+        "description": "Validate if a password reset token is valid before showing the reset form.",
+        "request": inline_serializer(
+            name="PasswordResetValidateToken",
+            fields={
+                "token": serializers.CharField(help_text="Password reset token to validate"),
+            }
+        ),
+        "responses": {
+            200: inline_serializer(
+                name="PasswordResetValidateTokenSuccess",
+                fields={
+                    "status": serializers.CharField(help_text="Token is valid"),
+                }
+            ),
+            400: inline_serializer(
+                name="PasswordResetValidateTokenError",
+                fields={
+                    "token": serializers.ListField(child=serializers.CharField()),
+                }
+            )
+        },
+        "tags": ["Authentication"]
+    }
+
 
 # =============================================================================
 # MEDICAL OPTIONS SCHEMAS

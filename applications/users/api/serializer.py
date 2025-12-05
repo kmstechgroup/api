@@ -100,7 +100,7 @@ class UserSerializer(ModelSerializer):
             "address", "phone_number",
             
             # Medical information
-            "blood_type", "sex", "height", "weight", "age",
+            "blood_type", "sex", "height", "weight", "birthdate",
             
             # Medical relationships (with free text fields for "others")
             "allergies", "allergies_ids", "allergies_other",

@@ -145,5 +145,7 @@ AUTHENTICATION_BACKENDS = [
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'SafeOn <noreply@safeon.com>'
 
-# Frontend URL for password reset links
-FRONTEND_URL = config('FRONTEND_URL', default='http://localhost:3000')
+# App URL scheme for password reset deep links (React Native)
+# Custom URL scheme format: safeon://reset-password?token=...
+# Configure in .env: APP_SCHEME=safeon
+APP_SCHEME = config('APP_SCHEME', default='safeon')
