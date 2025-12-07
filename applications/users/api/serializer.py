@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from rest_framework.serializers import ModelSerializer, CharField, PrimaryKeyRelatedField
+from rest_framework.serializers import ModelSerializer, CharField, PrimaryKeyRelatedField, DateField, IntegerField
+from datetime import datetime
 from ..models import User, Allergy, ChronicDisease, PreviousSurgery, Disability
 
 
@@ -66,6 +67,29 @@ class UserSerializer(ModelSerializer):
     previous_surgeries = PreviousSurgerySerializer(many=True, read_only=True)
     disabilities = DisabilitySerializer(many=True, read_only=True)
     
+    # Campos personalizados que permiten valores vacíos/null
+    birthdate = DateField(
+        input_formats=['%d-%m-%Y', '%Y-%m-%d', '%d/%m/%Y', '%Y/%m/%d'],
+        format='%d-%m-%Y',
+        required=False,
+        allow_null=True
+    )
+    height = serializers.IntegerField(
+        required=False,
+        allow_null=True,
+        min_value=1
+    )
+    weight = serializers.IntegerField(
+        required=False,
+        allow_null=True,
+        min_value=1
+    )
+    phone_number = serializers.IntegerField(
+        required=False,
+        allow_null=True,
+        min_value=0
+    )
+    
     # Write-only fields to receive IDs and update relationships
     allergies_ids = PrimaryKeyRelatedField(
         queryset=Allergy.objects.all(), 
@@ -131,6 +155,29 @@ class UserAdminSerializer(ModelSerializer):
     Excludes password field for security reasons.
     Used by administrators to manage user data.
     """
+    # Campos personalizados que permiten valores vacíos/null
+    birthdate = DateField(
+        input_formats=['%d-%m-%Y', '%Y-%m-%d', '%d/%m/%Y', '%Y/%m/%d'],
+        format='%d-%m-%Y',
+        required=False,
+        allow_null=True
+    )
+    height = serializers.IntegerField(
+        required=False,
+        allow_null=True,
+        min_value=1
+    )
+    weight = serializers.IntegerField(
+        required=False,
+        allow_null=True,
+        min_value=1
+    )
+    phone_number = serializers.IntegerField(
+        required=False,
+        allow_null=True,
+        min_value=0
+    )
+    
     class Meta:
         model = User
         exclude = ['password',]  # Exclude password for security
