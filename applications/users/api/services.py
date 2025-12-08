@@ -71,8 +71,6 @@ def reset_user_profile(user: User) -> User:
     user.disabilities_other = None
     user.close_contacts = {}
     user.phone_number = None
-    user.strikes = 0
-    user.blocked = False
     
     user.save()
     return user
