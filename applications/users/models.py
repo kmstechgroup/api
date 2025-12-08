@@ -204,7 +204,9 @@ class User(AbstractUser):
     # Emergency contacts
     close_contacts = models.JSONField(
         default=dict,
-        help_text="Emergency contacts in JSON format"
+        help_text="Emergency contacts in JSON format",
+        null=True,
+        blank=True,
     )
     
     # Contact information
