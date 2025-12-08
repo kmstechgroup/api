@@ -12,11 +12,11 @@ from .serializer import (
 from rest_framework.viewsets import ViewSet, ModelViewSet
 from rest_framework.permissions import IsAdminUser, AllowAny, IsAuthenticated
 from rest_framework.authtoken.models import Token
-from .services import login_user
+from .services import login_user, reset_user_profile
 from google.oauth2 import id_token
 from google.auth.transport import requests
 from .swagger_schemas import (
-    user_profile_schema,
+    user_profile_schema, user_reset_profile_schema,
     admin_users_list_schema, admin_users_create_schema, admin_users_retrieve_schema,
     admin_users_update_schema, admin_users_partial_update_schema, admin_users_destroy_schema,
     register_schema, login_schema, google_login_schema,
@@ -43,6 +43,14 @@ class UserViewSet(ViewSet):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @extend_schema(**user_reset_profile_schema())
+    @action(detail=False, methods=["patch"])
+    def reset_profile(self, request):
+        """Reset user profile data to null, keeping only essential fields."""
+        reset_user_profile(request.user)
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class UsersAdminViewSet(ModelViewSet):

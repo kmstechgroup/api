@@ -32,6 +32,17 @@ def user_profile_schema():
         "tags": ["User Profile"]
     }
 
+def user_reset_profile_schema():
+    """Schema for user profile reset endpoint"""
+    return {
+        "summary": "Reset user profile data",
+        "description": "Reset all user profile data to null, keeping only essential fields: id, password, email, identificator, is_active, last_login, date_joined, is_oauth_user, is_superuser, is_staff, google_id. All personal information, medical data, and relationships will be cleared.",
+        "responses": {
+            200: UserSerializer,
+        },
+        "tags": ["User Profile"]
+    }
+
 
 # =============================================================================
 # ADMIN USERS SCHEMAS
