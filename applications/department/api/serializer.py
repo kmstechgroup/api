@@ -1,4 +1,7 @@
 from rest_framework import serializers
-
-# Create your serializers here.
-
+from ..models import Department
+class DepartmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Department
+        fields = '__all__'
+        read_only_fields = ('jurisdiction_expanded',)
