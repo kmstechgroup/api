@@ -21,22 +21,22 @@ def password_reset_token_created_handler(sender, instance, reset_password_token,
     reset_url = f"{settings.APP_SCHEME}://reset-password?token={reset_password_token.key}"
     
     # Build email message
-    subject = "Restablecer contraseña - SafeOn"
+    subject = "Reset Password - SafeOn"
     
     message = f"""
-Hola {reset_password_token.user.first_name or 'Usuario'},
+Hello {reset_password_token.user.first_name or 'User'},
 
-Has solicitado restablecer tu contraseña en SafeOn.
+You have requested to reset your password on SafeOn.
 
-Haz clic en el siguiente enlace para continuar:
+Click on the following link to continue:
 {reset_url}
 
-Este enlace no expira, pero solo puede usarse una vez.
+This link does not expire, but can only be used once.
 
-Si no solicitaste este cambio, ignora este email y tu contraseña permanecerá sin cambios.
+If you did not request this change, please ignore this email and your password will remain unchanged.
 
-Saludos,
-El equipo de SafeOn
+Best regards,
+The SafeOn Team
 """
     
     # Send email

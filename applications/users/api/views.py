@@ -123,10 +123,10 @@ class UserGoogleLoginSet(ViewSet):
         token = serializer.validated_data["id_token"]
         identificator = serializer.validated_data["identificator"]
         try:
-            # ✅ Verificar token con Google
+            # Verify token with Google
             idinfo = id_token.verify_oauth2_token(token, requests.Request())
 
-            # Validar el aud (client_id de tu app en Google Cloud)
+            # Validate the aud (client_id of your app in Google Cloud)
             if idinfo["aud"] != "324154317577-fg88npuvs4d57nku05fs7ubcte2dbdro.apps.googleusercontent.com":
                 return Response(
                     {"error": "Invalid audience"}, status=status.HTTP_400_BAD_REQUEST
@@ -136,7 +136,7 @@ class UserGoogleLoginSet(ViewSet):
             first_name = idinfo.get("given_name")
             last_name = idinfo.get("family_name")
             
-            # Buscar o crear usuario
+            # Find or create user
             user, created = User.objects.get_or_create(
             email=email,
             defaults={
@@ -147,10 +147,10 @@ class UserGoogleLoginSet(ViewSet):
         )
 
 
-            # Generar token interno
+            # Generate internal token
             token_obj, _ = Token.objects.get_or_create(user=user)
 
-            # Serializar usuario para la respuesta
+            # Serialize user for response
             response_serializer = self.serializer_class(user)
 
             return Response(

@@ -1,39 +1,39 @@
-from django.db import models
+import uuid
+from django.contrib.gis.db import models
 
 
-app_name='department'
-
-#Model Department
 class Department(models.Model):
-    TYPE_DEPARTMENT = [
-        ('F', 'Firefighters'),
-        ('P', 'Police'),
-    ]
-
-    code_department = models.CharField(max_length=10, primary_key=True, editable=False)
-    type_department = models.CharField(max_length=1, choices=TYPE_DEPARTMENT)
-    name_department = models.CharField(max_length=50)
-    jurisdiction = models.JSONField()
-    city_center_lat = models.FloatField()
-    city_center_lon = models.FloatField()
-    phone = models.BigIntegerField()
-
-    def save(self, *args, **kwargs):
-        if not self.code_department:
-            # Find the last number used for this type
-            last = Department.objects.filter(type_department=self.type_department) \
-                .order_by('-code_department') \
-                .first()
-            
-            if last:
-                # Get number from 'F5' → 5
-                last_number = int(last.code_department[1:])
-            else:
-                last_number = 0
-
-            new_number = last_number + 1
-            self.code_department = f"{self.type_department}{new_number}"
-
-        super().save(*args, **kwargs)
+    """Department model representing emergency response departments."""
+    
+    code_department = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False
+    )
+    name = models.CharField(max_length=255)
+    address = models.CharField(max_length=255, blank=True, null=True)
+    phone = models.PositiveBigIntegerField(
+        blank=True, 
+        null=True,
+        help_text="Phone number as positive integer"
+    )
+    email = models.EmailField(blank=True, null=True)
+    jurisdiction = models.PolygonField(
+        blank=True,
+        null=True,
+        help_text="GeoJSON polygon representing the department's jurisdiction"
+    )
+    jurisdiction_expanded = models.PolygonField(
+        blank=True,
+        null=True,
+        help_text="Auto-calculated: jurisdiction expanded by 1km buffer"
+    )
+    
+    class Meta:
+        db_table = 'department'
+        verbose_name = 'Department'
+        verbose_name_plural = 'Departments'
+        ordering = ['name']
+    
     def __str__(self):
-        return f"Departmento: #{self.code_department}, Nombre: {self.type_department} {self.name_department}"
+        return self.name
